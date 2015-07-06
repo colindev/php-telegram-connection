@@ -1,11 +1,11 @@
 <?php namespace Rde\Telegram;
 
-abstract class Structure
+class Structure
 {
-    public function fill($obj)
+    public function fill($data)
     {
-        if (is_object($obj)) {
-            foreach ($obj as $k => $v)
+        if (is_object($data) || is_array($data)) {
+            foreach ($data as $k => $v)
             {
                 $this->{$k} = $v;
             }
