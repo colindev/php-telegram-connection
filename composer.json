@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Rde\\Telegram": "src/"
+            "Rde\\Telegram\\": "src/"
         }
     },
     "minimum-stability": "dev"
