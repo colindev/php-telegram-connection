@@ -21,16 +21,7 @@ switch ($method) {
         break;
 
     default:
-        $data['result'] = [
-            'update_id' => 1,
-            'message' => [
-                'message_id' => 11,
-                'from' => ['id' => 2],
-                'chat' => ['id' => 3],
-                'date' => time(),
-                'text' => 'message string'
-            ],
-        ];
+        // empty
 }
 
 echo json_encode($data);

@@ -12,13 +12,6 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(999, $conn->me->{'id'});
     }
 
-    public function testUpdate()
-    {
-        $conn = new \Rde\Telegram\Connection('xxx', 'http://'.self::$test_server_name.'/bot');
-        $ret = $conn->getUpdates();
-        $this->assertEquals('message string', $ret->{'message'}->{'text'});
-    }
-
     /** @beforeClass */
     public static function startServer()
     {
