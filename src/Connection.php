@@ -5,9 +5,9 @@ class Connection
     public $me;
     private $url;
 
-    public function __construct($token)
+    public function __construct($token, $target = 'https://api.telegram.org/bot')
     {
-        $this->url = 'https://api.telegram.org/bot'.$token;
+        $this->url = $target.$token;
 
         $this->me = $this->getMe();
     }
@@ -21,15 +21,17 @@ class Connection
         return false;
     }
 
+    protected function resolveUrl($api, $params)
+    {
+        ! empty($params) and $payload = is_string($params) ? $params : http_build_query($params);
+
+        return "{$this->url}/{$api}".(isset($payload) ? "?{$payload}" : '');
+    }
+
     public function __call($method, $params)
     {
-        $params = array_shift($params);
-        if ($params) {
-            $payload = is_string($params) ? $params : http_build_query($params);
-        }
+        $url = $this->resolveUrl($method, array_shift($params));
 
-        $filename = "{$this->url}/{$method}".(isset($payload) ? "?{$payload}" : '');
-
-        return $this->resolveData(file_get_contents($filename));
+        return $this->resolveData(file_get_contents($url));
     }
 }

@@ -8,12 +8,27 @@
             "email": "colin1124x@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:chungyo-rde/php-terminal.git"
+        }
+    ],
     "require": {
         "php": ">=5.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*",
+        "rde/php-terminal": "*"
     },
     "autoload": {
         "psr-4": {
             "Rde\\Telegram\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "": "tests/"
         }
     },
     "minimum-stability": "dev"
