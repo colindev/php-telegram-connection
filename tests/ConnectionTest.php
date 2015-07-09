@@ -3,7 +3,7 @@
 class ConnectionTest extends PHPUnit_Framework_TestCase
 {
     protected static $test_server_name = '127.0.0.1:9876';
-    protected static $test_server_access = '/tmp/log';
+    protected static $test_server_access = '/dev/null';
 
     public function testConnect()
     {
