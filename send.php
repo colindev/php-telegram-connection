@@ -17,4 +17,4 @@ $reply->{'text'} = $argv[3];
 
 echo $reply, PHP_EOL;
 
-if ($conn->sendMessage($reply)) echo 'ok';
+if ($conn->sendMessage($reply)) echo "\e[32mok\e[m", PHP_EOL;
