@@ -17,4 +17,11 @@ $conn = new Connection($token);
 
 `$comm->me` 結構請參考 [Telegram API getMe]
 
+### cli tool
+```sh
+
+./send.php <token> <chat_id> 'your text'
+
+```
+
 [Telegram API getMe]:https://core.telegram.org/bots/api#getme
