@@ -4,12 +4,23 @@ class Connection
 {
     public $me;
     private $url;
+    private $timeout = 0;
 
     public function __construct($token, $target = 'https://api.telegram.org/bot')
     {
         $this->url = $target.$token;
 
-        $this->me = $this->getMe();
+        $this->me = $this->__call('getMe', array());
+    }
+
+    public function getMe()
+    {
+        return $this->me;
+    }
+
+    public function timeout($t)
+    {
+        $this->timeout = (int) $t;
     }
 
     protected function resolveData($str)
@@ -32,6 +43,15 @@ class Connection
     {
         $url = $this->resolveUrl($method, array_shift($params));
 
-        return $this->resolveData(file_get_contents($url));
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        $ret = curl_exec($ch);
+
+        if ($err = curl_error($ch)) {
+            throw new \RuntimeException($err);
+        }
+
+        return $this->resolveData($ret);
     }
 }

@@ -2,6 +2,11 @@
 
 class Structure
 {
+    public function __construct($data = null)
+    {
+        null !== $data and $this->fill($data);
+    }
+
     public function fill($data)
     {
         if (is_object($data) || is_array($data)) {

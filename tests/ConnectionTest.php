@@ -12,6 +12,16 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(999, $conn->me->{'id'});
     }
 
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testTimeout()
+    {
+        $conn = new \Rde\Telegram\Connection('xxx', 'http://'.self::$test_server_name.'/bot');
+        $conn->timeout(1);
+        $conn->triggerTimeout('t=5');
+    }
+
     /** @beforeClass */
     public static function startServer()
     {

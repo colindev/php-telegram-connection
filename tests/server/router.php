@@ -20,6 +20,10 @@ switch ($method) {
         ];
         break;
 
+    case 'triggerTimeout':
+        sleep((int) $payload['t']);
+        return;
+
     default:
         // empty
 }

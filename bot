@@ -21,6 +21,7 @@ register_shutdown_function(function(){
 set_exception_handler(function($e){
 echo <<<EOF
 \e[31m
+{$e->getMessage()}
 {$e->getFile()}:{$e->getLine()}
 {$e->getTraceAsString()}
 \e[m
@@ -61,8 +62,9 @@ $bots = new Bots();
 $conn = $bots->find($argv[1]);
 $method = $argv[2];
 $payload = isset($argv[3]) ? $argv[3] : null;
+$timeout = 10;
 
-$ret = $conn ? print_r(call_user_func(array($conn, $method), $payload), 1) : false;
+$ret = $conn ? print_r(call_user_func(array($conn, $method), $payload, $timeout), 1) : false;
 
-echo $ret ? "\e[32m{$ret}\e[m" : "\e\[31fail\e[m";
+echo $ret ? "\e[32m{$ret}\e[m" : "\e[31mfail\e[m";
 echo PHP_EOL;
