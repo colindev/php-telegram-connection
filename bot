@@ -58,6 +58,11 @@ class Bots
     }
 }
 
+if (count($argv) < 2) {
+    echo "\e[32m\tUsage: {$argv[0]} <token|bot-name> method [payload]\e[m", PHP_EOL;
+    exit(1);
+}
+
 $bots = new Bots();
 $conn = $bots->find($argv[1]);
 $method = $argv[2];
