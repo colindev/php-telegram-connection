@@ -1,0 +1,68 @@
+#!/usr/bin/env php
+<?php
+
+ini_set('error_reporting', 0);
+require __DIR__.'/vendor/autoload.php';
+
+set_error_handler(function(){
+    echo "\e[31m";
+    var_dump(func_get_args());
+    echo "\e[m";
+});
+
+register_shutdown_function(function(){
+    if ($err = error_get_last()) {
+        echo "\e[31m";
+        var_dump($err);
+        echo "\e[m";
+    }
+});
+
+set_exception_handler(function($e){
+echo <<<EOF
+\e[31m
+{$e->getFile()}:{$e->getLine()}
+{$e->getTraceAsString()}
+\e[m
+EOF;
+});
+
+class Bots
+{
+    private $file;
+    private $resource = array();
+    function __construct()
+    {
+        $this->file = __DIR__.'/bots.json';
+        ! is_file($this->file) and touch($this->file);
+        $this->resource = json_decode(file_get_contents($this->file), true) ?: array();
+    }
+
+    function __destruct()
+    {
+        file_put_contents($this->file, json_encode($this->resource));
+    }
+
+    function find($bot)
+    {
+        $conn = null;
+        if (preg_match('/^\d+:[\w-]+$/', $bot) &&  ! in_array($bot, $this->resource)) {
+            $conn = new \Rde\Telegram\Connection($bot);
+            $conn->me and $this->resource[$conn->me->{'username'}] = $bot;
+        } elseif (isset($this->resource[$bot])) {
+            $conn = new \Rde\Telegram\Connection($this->resource[$bot]);
+        }
+
+        return $conn;
+    }
+}
+
+$bots = new Bots();
+$conn = $bots->find($argv[1]);
+$method = $argv[2];
+$payload = isset($argv[3]) ? $argv[3] : null;
+
+$ret = $conn ? print_r(call_user_func(array($conn, $method), $payload), 1) : false;
+
+echo $ret ? "\e[32m{$ret}\e[m" : "\e\[31fail\e[m";
+echo PHP_EOL;

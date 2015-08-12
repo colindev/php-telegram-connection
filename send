@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+$bot = $argv[1];
+$reply = new \Rde\Telegram\Structure();
+$reply->{'chat_id'} = (int) $argv[2];
+$reply->{'text'} = $argv[3];
+
+$cmd = __DIR__."/bot '{$bot}' sendMessage '{$reply}'";
+echo "\e[35mexec: {$cmd}\e[m", PHP_EOL;
+exec($cmd, $out);
+echo join($out, PHP_EOL), PHP_EOL;
