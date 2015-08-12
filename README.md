@@ -21,16 +21,12 @@ $conn = new Connection($token);
 
 發送訊息
 ```sh
-
 $ ./send <token> <chat_id> 'your text'
-
 ```
 
-bot api
+bot api 轉發
 ```sh
-
 $ ./bot <token> <method> <payload>
-
 ```
 
 [Telegram API getMe]:https://core.telegram.org/bots/api#getme
