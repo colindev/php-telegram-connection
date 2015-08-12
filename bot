@@ -64,7 +64,7 @@ $method = $argv[2];
 $payload = isset($argv[3]) ? $argv[3] : null;
 $timeout = 10;
 
-$ret = $conn ? print_r(call_user_func(array($conn, $method), $payload, $timeout), 1) : false;
+$ret = $conn ? print_r(call_user_func(array($conn->timeout($timeout), $method), $payload)) : false;
 
 echo $ret ? "\e[32m{$ret}\e[m" : "\e[31mfail\e[m";
 echo PHP_EOL;

@@ -50,6 +50,6 @@ class ConnectionTest extends PHPUnit_Framework_TestCase
     public static function shutdownServer()
     {
         exec("pkill -f 'php -S ".self::$test_server_name."'");
-        \Rde\Terminal::stdout('server shutdown', "\e[32m");
+        \Rde\Terminal::stdout(PHP_EOL.'server shutdown', "\e[32m");
     }
 }

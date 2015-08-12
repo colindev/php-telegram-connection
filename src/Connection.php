@@ -21,6 +21,8 @@ class Connection
     public function timeout($t)
     {
         $this->timeout = (int) $t;
+
+        return $this;
     }
 
     protected function resolveData($str)
