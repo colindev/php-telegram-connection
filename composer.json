@@ -11,7 +11,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:chungyo-rde/php-terminal.git"
+            "url": "gogs@rde-tech.vir888.com:colin/php-terminal.git"
         }
     ],
     "require": {
