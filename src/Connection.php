@@ -4,7 +4,7 @@ class Connection
 {
     public $me;
     private $url;
-    private $timeout = 0;
+    private $timeout = 600;
 
     public function __construct($token, $target = 'https://api.telegram.org/bot')
     {
@@ -45,15 +45,10 @@ class Connection
     {
         $url = $this->resolveUrl($method, array_shift($params));
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        $ret = curl_exec($ch);
+        exec("wget -t {$this->timeout} --timeout {$this->timeout} -qO- '{$url}'", $out);
+        
+        if (empty($out)) throw new \RuntimeException();
 
-        if ($err = curl_error($ch)) {
-            throw new \RuntimeException($err);
-        }
-
-        return $this->resolveData($ret);
+        return $this->resolveData(join('', $out));
     }
 }
