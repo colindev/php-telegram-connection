@@ -15,8 +15,8 @@ use Rde\Telegram\Connection;
 $conn = new Connection($token);
 
 ```
-
-`$conn->me` 結構請參考 [Telegram API getMe]
+`$token` 取得方式請參考 [Telegram Bot Token]
+`$conn->me` 結構請參考 [Telegram Bot API getMe]
 
 發送訊息
 ```php
@@ -31,18 +31,28 @@ $payload->{'text'} = 'some text string';
 $telegram_response = $conn->sendMessage($payload);
 
 ```
-
+使用 post
+```php
+$conn->method('POST');
+//$conn->sendMessage($payload);
+```
 
 ### cli tool
 
-發送訊息
-```sh
-$ ./send <token> <chat_id> 'your text'
-```
-
 bot api 轉發
 ```sh
-$ ./bot <token> <method> <payload>
+$ ./bot <token|bot_name> <method> [payload]
 ```
 
-[Telegram API getMe]:https://core.telegram.org/bots/api#getme
+使用 post
+```sh
+$ METHOD=POST ./bot <token|bot_name> <method> [payload]
+```
+
+發送訊息
+```sh
+$ ./send <token|bot_name> <chat_id> 'your text'
+```
+
+[Telegram Bot Token]:https://core.telegram.org/bots/api#authorizing-your-bot
+[Telegram Bot API getMe]:https://core.telegram.org/bots/api#getme
