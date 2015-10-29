@@ -15,8 +15,9 @@ use Rde\Telegram\Connection;
 $conn = new Connection($token);
 
 ```
-`$token` 取得方式請參考 [Telegram Bot Token]
-`$conn->me` 結構請參考 [Telegram Bot API getMe]
+
+- `$token` 取得方式請參考 [Telegram Bot Token]
+- `$conn->me` 結構請參考 [Telegram Bot API getMe]
 
 發送訊息
 ```php
