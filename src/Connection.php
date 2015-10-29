@@ -98,7 +98,7 @@ class Connection
         $stream[] = "Content-Length: {$len}";
         $stream[] = "Content-Type: application/x-www-form-urlencoded; charset=utf8";
         $stream[] = "Connection: close";
-        $stream[] = "\r\n";
+        $stream[] = "";
         $stream[] = $f['payload'];
     
         return join("\r\n", $stream);
@@ -126,6 +126,7 @@ class Connection
         
         $this->verbose[] = "remote: {$remote}";
         $this->verbose[] = "timeout: {$this->timeout}";
+        $this->verbose[] = "http_method: {$this->method()}";
 
         $this->timeout && stream_set_timeout($fp, $this->timeout);
 
@@ -133,12 +134,13 @@ class Connection
             throw new \RuntimeException($errstr, $errno);
         }
 
-        fwrite($fp, call_user_func(array($this, 'resolveRequest'.ucwords(strtolower($this->method()))), $f));
+        fwrite($fp, $request = call_user_func(array($this, 'resolveRequest'.ucwords(strtolower($this->method()))), $f));
 
         $string = stream_get_contents($fp, -1);
         $meta = stream_get_meta_data($fp);
 
         $this->verbose[] = "meta: ".json_encode($meta);
+        $this->verbose[] = "request: {$request}";
         $this->verbose[] = "response: {$string}";
 
         fclose($fp);
