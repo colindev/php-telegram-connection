@@ -47,13 +47,15 @@ class Bots
     function find($bot)
     {
         $conn = null;
-        if (preg_match('/^\d+:[\w-]+$/', $bot) &&  ! in_array($bot, $this->resource)) {
+        if (preg_match('/^\d+:[-\w]+$/', $bot) &&  ! in_array($bot, $this->resource)) {
             $conn = new \Rde\Telegram\Connection($bot);
             $conn->me and $this->resource[$conn->me->{'username'}] = $bot;
         } elseif (isset($this->resource[$bot])) {
             $conn = new \Rde\Telegram\Connection($this->resource[$bot]);
+        } elseif (in_array($bot, $this->resource)) {
+            $conn = new \Rde\Telegram\Connection($bot);
         }
-
+        
         return $conn;
     }
 }
