@@ -3,13 +3,30 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-$bot = $argv[1];
+$opts = $argv;
+$i = count($opts);
+$verbose = false;
+while ($i--) {
+    if ('-vvv' === $opts[$i]) {
+        array_splice($opts, $i, 1);
+        $verbose = true;
+    } 
+}
+
+count($opts) != 4 && usage($opts);
+
+$bot = $opts[1];
 $reply = new \Rde\Telegram\Structure(array(
-    'chat_id' => (int) $argv[2],
-    'text' => $argv[3],
+    'chat_id' => (int) $opts[2],
+    'text' => $opts[3],
 ));
 
-$cmd = __DIR__."/bot '{$bot}' sendMessage '{$reply}'";
+$cmd = __DIR__."/bot '{$bot}' sendMessage '{$reply}'".($verbose?' -vvv':'');
 echo "\e[35mexec: {$cmd}\e[m", PHP_EOL;
 exec($cmd, $out);
 echo join($out, PHP_EOL), PHP_EOL;
+
+function usage($opts){
+    echo "\e[32m\tUsage: {$opts[0]} <botname|token> <chat_id> <message>\e[m", PHP_EOL;
+    exit(1);
+}

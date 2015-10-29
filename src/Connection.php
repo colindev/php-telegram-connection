@@ -7,6 +7,8 @@ class Connection
     private $timeout = 0;
     private $method = 'GET';
 
+    public $verbose = array();
+
     public function __construct($token, $target = 'https://api.telegram.org/bot')
     {
         $this->url = $target.$token;
@@ -72,13 +74,18 @@ class Connection
 
         ! empty($params) and $payload = is_string($params) ? $params : http_build_query($params);
 
-        return array(
+        $ret = array(
             'socket_type' => $socket_type,
             'host' => $info[2],
             'port' => $port,
             'uri' => join('/', array_slice($info, 3))."/{$api}",
             'payload' => $payload,
         );
+
+        $this->verbose[] = "uri: {$ret['uri']}";
+        $this->verbose[] = "payload: {$ret['payload']}";
+
+        return $ret;
     }
 
     protected function resolveRequestPost($f)
@@ -90,6 +97,7 @@ class Connection
         $stream[] = "Accept: */*";
         $stream[] = "Content-Length: {$len}";
         $stream[] = "Content-Type: application/x-www-form-urlencoded; charset=utf8";
+        $stream[] = "Connection: close";
         $stream[] = "\r\n";
         $stream[] = $f['payload'];
     
@@ -103,6 +111,7 @@ class Connection
         $stream[] = "GET /{$f['uri']}{$has_args}{$f['payload']} HTTP/1.1";
         $stream[] = "Host: {$f['host']}";
         $stream[] = "Accept: */*";
+        $stream[] = "Connection: close";
         $stream[] = "\r\n";
     
         return join("\r\n", $stream);
@@ -111,10 +120,13 @@ class Connection
     protected function resolveRequest($f) 
     {
         $fp = stream_socket_client(
-            "{$f['socket_type']}://{$f['host']}:{$f['port']}", 
+            $remote = "{$f['socket_type']}://{$f['host']}:{$f['port']}", 
             $errno, 
             $errstr);
         
+        $this->verbose[] = "remote: {$remote}";
+        $this->verbose[] = "timeout: {$this->timeout}";
+
         $this->timeout && stream_set_timeout($fp, $this->timeout);
 
         if ( ! $fp) {
@@ -125,6 +137,10 @@ class Connection
 
         $string = stream_get_contents($fp, -1);
         $meta = stream_get_meta_data($fp);
+
+        $this->verbose[] = "meta: ".json_encode($meta);
+        $this->verbose[] = "response: {$string}";
+
         fclose($fp);
         if ($meta['timed_out']) {
             throw new \RuntimeException("timeout({$this->timeout})!");
@@ -137,6 +153,8 @@ class Connection
 
     public function __call($method, $params)
     {
+        $this->verbose = array();
+
         $info = $this->resolveUrl($method, array_shift($params));
         $data = $this->resolveRequest($info);
 
